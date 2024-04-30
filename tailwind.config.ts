@@ -21,10 +21,6 @@ const config = {
       backgroundSize: {
         "size-200": "200% 200%",
       },
-      colors: {
-        golden: "#cfaf6b",
-        defaulblue: "#27364d",
-      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
