@@ -1,4 +1,4 @@
-import { Page, Sidebar, StockHeader } from "@/components";
+import { Modal, Page, Sidebar, StockHeader } from "@/components";
 import {
   Table,
   TableBody,
@@ -13,6 +13,16 @@ import { useEffect, useState } from "react";
 
 export default function Estoque() {
   const [products, setProducts] = useState<Product[] | null>();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+      setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+      setIsModalOpen(false);
+  };
 
   const fetchProducts = async () => {
     const data = await fetch(
@@ -43,8 +53,11 @@ export default function Estoque() {
         <StockHeader
           title="Controle de estoque"
           buttonLabel="Adicionar"
-          onClick={() => console.log("testes")}
+          onClick={openModal}
         />
+        <Modal isOpen={isModalOpen} onClose={closeModal} children={undefined}>
+                {/* Content of the modal */}
+        </Modal>
         <Table>
           <TableCaption>Produtos em estoque</TableCaption>
           <TableHeader>

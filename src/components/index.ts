@@ -6,3 +6,4 @@ export { default as BaseChartCard } from "@/components/cards/BaseChartCard";
 export { default as StockHeader } from "@/components/ui/stockheader";
 export { default as UserIcon } from "@/components/ui/usericon";
 export { default as Form} from "@/components/ui/addform";
+export { default as Modal} from "@/components/ui/modal";

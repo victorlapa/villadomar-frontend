@@ -18,7 +18,7 @@ const StockHeader: React.FC<StockHeaderProps> = ({
       <label className="font-bold text-xl mr-10 text-black bg-darkest">
         {title}
       </label>
-      <Button variant="standart" onClick={onClick}>
+      <Button variant="outline" onClick={onClick}>
         {buttonLabel}
       </Button>
       <div className="flex-grow"></div>
