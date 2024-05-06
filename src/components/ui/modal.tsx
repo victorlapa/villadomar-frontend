@@ -6,7 +6,7 @@ interface ModalProps {
     children: React.ReactNode;
 }
 
-const modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     const [isModalOpen, setIsModalOpen] = useState(isOpen);
     const modalRef = useRef<HTMLDivElement>(null);
 
@@ -38,8 +38,9 @@ const modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     return (
         <>
             {isModalOpen && (
-                <div className={`transition ease-in-out delay-150 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
-                    <div ref={modalRef} className="bg-white p-4 rounded-lg w-3/5 h-3/5 relative" style={{ pointerEvents: 'auto' }}>
+                //n sei fazer animacao em tailwind espero que alguem consiga
+                <div className={`transition-opacity fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ${isOpen ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s' }}>
+                    <div ref={modalRef} className={`transition-transform bg-white p-4 rounded-lg w-3/5 h-3/5 relative ${isOpen ? 'scale-100' : 'scale-0'}`} style={{ pointerEvents: 'auto', transition: 'transform 0.3s' }}>
                         <button className="absolute top-0 right-2 m-2 text-gray-500" onClick={closeModal}>
                             X
                         </button>
@@ -51,4 +52,4 @@ const modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     );
 };
 
-export default modal;
+export default Modal;

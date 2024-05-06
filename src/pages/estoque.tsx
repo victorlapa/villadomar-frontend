@@ -55,8 +55,10 @@ export default function Estoque() {
           buttonLabel="Adicionar"
           onClick={openModal}
         />
-        <Modal isOpen={isModalOpen} onClose={closeModal} children={undefined}>
-                {/* Content of the modal */}
+        <Modal isOpen={isModalOpen} onClose={closeModal}>
+          <form>
+            <input type="text" placeholder="Enter text"/>
+          </form>
         </Modal>
         <Table>
           <TableCaption>Produtos em estoque</TableCaption>
