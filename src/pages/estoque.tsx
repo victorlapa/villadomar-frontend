@@ -1,4 +1,4 @@
-import { Modal, Page, Sidebar, StockHeader } from "@/components";
+import { Form, Modal, Page, Sidebar, StockHeader } from "@/components";
 import {
   Table,
   TableBody,
@@ -46,6 +46,17 @@ export default function Estoque() {
     };
   }, []);
 
+  const fields = [
+    { name: 'Nome', type: 'text', className: 'text-red' },
+    { name: 'Valor', type: 'number' },
+    { name: 'Descrição', type: 'text' },
+];
+
+const handleSubmit = (formData: Record<string, string>) => {
+  // Handle form submission data here
+  console.log(formData);
+};
+
   return (
     <Page>
       <Sidebar />
@@ -56,9 +67,7 @@ export default function Estoque() {
           onClick={openModal}
         />
         <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <form>
-            <input type="text" placeholder="Enter text"/>
-          </form>
+          <Form fields={fields} onSubmit={handleSubmit} />
         </Modal>
         <Table>
           <TableCaption>Produtos em estoque</TableCaption>

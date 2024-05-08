@@ -40,7 +40,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
             {isModalOpen && (
                 //n sei fazer animacao em tailwind espero que alguem consiga
                 <div className={`transition-opacity fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ${isOpen ? 'opacity-100' : 'opacity-0'}`} style={{ transition: 'opacity 0.3s' }}>
-                    <div ref={modalRef} className={`transition-transform bg-white p-4 rounded-lg w-3/5 h-3/5 relative ${isOpen ? 'scale-100' : 'scale-0'}`} style={{ pointerEvents: 'auto', transition: 'transform 0.3s' }}>
+                    <div ref={modalRef} className={`flex justify-center transition-transform bg-white p-4 rounded-lg w-3/5 h-3/5 relative ${isOpen ? 'scale-100' : 'scale-0'}`} style={{ pointerEvents: 'auto', transition: 'transform 0.3s' }}>
                         <button className="absolute top-0 right-2 m-2 text-gray-500" onClick={closeModal}>
                             X
                         </button>
