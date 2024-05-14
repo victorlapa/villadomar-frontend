@@ -20,7 +20,7 @@ const UserIcon = () => {
         </div>
 
         {showOptions && (
-          <div className="text-base absolute bottom-35 transform -translate-x-1/2 bg-white p-2 rounded-md shadow-md z-20">
+          <div className="text-base absolute bottom-30 transform -translate-x-1/2 bg-white p-2 rounded-md shadow-md z-20">
             <Link
               href="/"
               className="block w-full py-2 px-4 text-left hover:bg-gray-100"
