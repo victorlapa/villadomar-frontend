@@ -17,11 +17,11 @@ export default function Estoque() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
-      setIsModalOpen(true);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
-      setIsModalOpen(false);
+    setIsModalOpen(false);
   };
 
   const fetchProducts = async () => {
@@ -47,15 +47,13 @@ export default function Estoque() {
   }, []);
 
   const fields = [
-    { name: 'Nome', type: 'text', className: 'text-red' },
-    { name: 'Valor', type: 'number' },
-    { name: 'Descrição', type: 'text' },
-];
+    { name: "name", type: "text" },
+    { name: "description", type: "text" },
+  ];
 
-const handleSubmit = (formData: Record<string, string>) => {
-  // Handle form submission data here
-  console.log(formData);
-};
+  const handleSubmit = (formData: Record<string, string>) => {
+    console.log(formData);
+  };
 
   return (
     <Page>
