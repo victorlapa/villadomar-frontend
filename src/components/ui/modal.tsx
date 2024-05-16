@@ -50,7 +50,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
         >
           <div
             ref={modalRef}
-            className={`flex justify-center transition-transform bg-white p-4 rounded-lg w-3/5 h-3/5 relative ${
+            className={`flex justify-center items-center transition-transform bg-white p-4 rounded-lg w-3/5 h-3/5 relative ${
               isOpen ? "scale-100" : "scale-0"
             }`}
             style={{ pointerEvents: "auto", transition: "transform 0.3s" }}

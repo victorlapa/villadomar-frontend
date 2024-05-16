@@ -3,6 +3,7 @@ import { Button } from "./button";
 
 interface Field {
   name: string;
+  placeholder: string;
   type: string;
   className?: string; // Add className property
 }
@@ -45,12 +46,12 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
   };
 
   return (
-    <div className="flex items-center justify-center flex-col">
+    <div className="flex items-center justify-center w-1/2 h-3/4 flex-col rounded-3xl bg-gray-100 shadow-xl">
       {fields.map((field, index) => (
         <input
           key={index}
           type={field.type}
-          placeholder={field.name}
+          placeholder={field.placeholder}
           value={formData[field.name] || ""}
           onChange={(e) => handleChange(field.name, e.target.value)}
           className={`border border-gray-300 rounded-md px-2 py-1 m-2 ${field.className}`}
