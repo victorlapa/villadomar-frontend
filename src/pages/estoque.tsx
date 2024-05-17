@@ -62,7 +62,7 @@ export default function Estoque() {
   const handleDelete = async (productId: number) => {
     try {
       // n sei se tem link pra deletar 
-      const response = await fetch(`linkapi/delete/${productId}`, {
+      const response = await fetch(`https://villadomarapi.azurewebsites.net/api/Products/DeleteProduct?id=${productId}`, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -79,20 +79,8 @@ export default function Estoque() {
   // sera q daria pra fazer com que todo edit fosse modularizado, ou to viajando?
   // na vdd o editar seria melhor arbri uma tela nova e la rodar essa funcao 
   // ou ent editar direto na tabela, mas n sei o quao dificil isso é 
-  const handleEdit = async (productId: number) => {
-    try {
-      // n sei se tem link pra editar 
-      const response = await fetch(`linkapi/edit/${productId}`, {
-        method: 'UPDATE',
-      });
-      if (response.ok) {
-        // n sei o q fazeria 
-      } else {
-        alert('Falaha ao editar o produto');
-      }
-    } catch (error) {
-      console.error('Ocorrou um erro ao editar o produto', error);
-    }
+  const handleEdit = () => {
+    openModal()
   };
   
 
@@ -131,7 +119,7 @@ export default function Estoque() {
                 <TableCell>{product.description}</TableCell>
                 <TableCell width={200}>
                   <Button onClick={() => handleDelete(product.id)} style={{ marginRight: '10px' }}>Delete</Button>
-                  <Button onClick={() => handleEdit(product.id)}>Editar</Button>
+                  <Button onClick={() => handleEdit()}>Editar</Button>
                 </TableCell>
               </TableRow>
             ))}

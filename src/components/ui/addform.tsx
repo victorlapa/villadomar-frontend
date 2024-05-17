@@ -59,7 +59,7 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
       ))}
       <Button
         onClick={handleSubmit}
-        className="bg-sky-950 text-white px-4 py-2 rounded-md"
+        className="bg-sky-950 text-white px-4 py-2 rounded-md w-2/5"
       >
         Submit
       </Button>
