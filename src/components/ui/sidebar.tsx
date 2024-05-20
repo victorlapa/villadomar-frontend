@@ -18,7 +18,7 @@ const Sidebar = () => {
           />
           <span className="text-white">Estoque</span>
         </Link>
-        <Link href="/">
+        <Link href="/financeiro">
           <Image
             src="/coins.svg"
             alt="Logo"
