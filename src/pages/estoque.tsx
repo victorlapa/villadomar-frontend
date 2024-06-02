@@ -1,4 +1,5 @@
 import { Form, Modal, Page, Sidebar, StockHeader } from "@/components";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -47,14 +48,44 @@ export default function Estoque() {
   }, []);
 
   const fields = [
-    { name: "name", type: "text" },
-    { name: "description", type: "text" },
+    { name: "name", type: "text", placeholder: 'Nome do produto' },
+    { name: "description", type: "text", placeholder: 'Descrição' },
+    //{ name: "Preço", type: "number" }, Depene do stake holder aqui
   ];
 
   const handleSubmit = (formData: Record<string, string>) => {
     console.log(formData);
   };
 
+  // Delete do produto 
+  // sera q seria melhor colocar em outros arquivos ou deixar aqui ta suave?
+  const handleDelete = async (productId: number) => {
+    try {
+      // n sei se tem link pra deletar 
+      const response = await fetch(`https://villadomarapi.azurewebsites.net/api/Products/DeleteProduct?id=${productId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        //se ok o delete ja filtra os novos
+        setProducts((prevProducts) => prevProducts?.filter((product) => product.id !== productId));
+      } else {
+        alert('Falaha ao deletar o produto');
+      }
+    } catch (error) {
+      console.error('Ocorrou um erro ao deltar o produto', error);
+    }
+  };
+
+  // sera q daria pra fazer com que todo edit fosse modularizado, ou to viajando?
+  // na vdd o editar seria melhor arbri uma tela nova e la rodar essa funcao 
+  // ou ent editar direto na tabela, mas n sei o quao dificil isso é 
+  const handleEdit = () => {
+    openModal()
+  };
+  
+
+  // tem q ver se dar pra mudar o tamanho da celular de acoes 
+  // ia ser legal botar um botao de lixeira e de um lapis 
   return (
     <Page>
       <Sidebar />
@@ -73,6 +104,7 @@ export default function Estoque() {
             <TableRow>
               <TableHead>Nome</TableHead>
               <TableHead>Descrição</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -85,6 +117,10 @@ export default function Estoque() {
               <TableRow key={product.id}>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
+                <TableCell width={200}>
+                  <Button onClick={() => handleDelete(product.id)} style={{ marginRight: '10px' }}>Delete</Button>
+                  <Button onClick={() => handleEdit()}>Editar</Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
