@@ -5,15 +5,17 @@ interface Field {
   name: string;
   placeholder: string;
   type: string;
-  className?: string; // Add className property
+  className?: string;
+  id: string; // Add className property
 }
 
 interface FormProps {
   fields: Field[];
-  onSubmit: (formData: Record<string, string>) => void;
+  onSubmit: () => void; 
+// Modify the type of onSubmit to accept an arrow function
 }
 
-const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
+const Form: React.FC<FormProps> = ({ fields, onSubmit}) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
 
   const handleChange = (field: string, value: string) => {
@@ -49,6 +51,7 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
     <div className="flex items-center justify-center w-1/2 h-3/4 flex-col rounded-3xl bg-gray-100 shadow-xl">
       {fields.map((field, index) => (
         <input
+          id={field.id}
           key={index}
           type={field.type}
           placeholder={field.placeholder}
@@ -58,7 +61,7 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
         />
       ))}
       <Button
-        onClick={handleSubmit}
+        onClick={onSubmit}
         className="bg-sky-950 text-white px-4 py-2 rounded-md w-2/5"
       >
         Submit
