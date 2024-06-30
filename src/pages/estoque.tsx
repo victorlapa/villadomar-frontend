@@ -11,9 +11,12 @@ import {
 } from "@/components/ui/table";
 import { Product } from "@/types/products";
 import { useEffect, useState } from "react";
+import { ProductType } from '@/types/productType';
+import { Field } from '@/types/field';
 
 export default function Estoque() {
   const [products, setProducts] = useState<Product[] | null>();
+  const [productType, setProductType] = useState<ProductType[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -27,12 +30,21 @@ export default function Estoque() {
 
   const fetchProducts = async () => {
     const data = await fetch(
-      "https://villadomarapi.azurewebsites.net/api/Products/GetProducts"
+      "https://villadomarapi.azurewebsites.net/api/Products/GetProductsWithAmount"
     );
     const response = await data.json();
 
     return response;
   };
+
+  const fetchProductType = async () => {
+    const data = await fetch(
+      "https://villadomarapi.azurewebsites.net/api/TypeProduct/GetTypeProducts"
+    );
+    const response = await data.json();
+
+    return response;
+  }
 
   useEffect(() => {
     let ignore = false;
@@ -42,15 +54,22 @@ export default function Estoque() {
         setProducts(result);
       }
     });
+    fetchProductType().then((result) => {
+      if(!ignore){
+        setProductType(result);
+      }
+    })
     return () => {
       ignore = true;
     };
   }, []);
 
-  const fields = [
-    { name: "name", type: "text", placeholder: 'Nome do produto' },
-    { name: "description", type: "text", placeholder: 'Descrição' },
-    //{ name: "Preço", type: "number" }, Depene do stake holder aqui
+  const fields: Field[] = [
+    { name: 'Nome', type: 'text', className: 'text-red' },
+    { name: 'Valor', type: 'number' },
+    { name: 'Descrição', type: 'text' },
+    { name: 'Peso', type: 'number' },
+    { name: 'Tipo', type: 'select', values: productType },
   ];
 
   const handleSubmit = (formData: Record<string, string>) => {
@@ -67,7 +86,7 @@ export default function Estoque() {
       });
       if (response.ok) {
         //se ok o delete ja filtra os novos
-        setProducts((prevProducts) => prevProducts?.filter((product) => product.id !== productId));
+        setProducts((prevProducts) => prevProducts?.filter((product) => product.product.id !== productId));
       } else {
         alert('Falaha ao deletar o produto');
       }
@@ -104,7 +123,11 @@ export default function Estoque() {
             <TableRow>
               <TableHead>Nome</TableHead>
               <TableHead>Descrição</TableHead>
-              <TableHead>Ações</TableHead>
+              <TableHead>Valor</TableHead>
+              <TableHead>Peso</TableHead>
+              <TableHead>Tipo</TableHead>
+              <TableHead>Fornecedor</TableHead>
+              <TableHead>Quantidade</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -114,11 +137,16 @@ export default function Estoque() {
               </TableRow>
             )}
             {products?.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.description}</TableCell>
+              <TableRow key={product.product.id}>
+                <TableCell>{product.product.name}</TableCell>
+                <TableCell>{product.product.description}</TableCell>
+                <TableCell>{product.product.value}</TableCell>
+                <TableCell>{product.product.weight}</TableCell>
+                <TableCell>{product.product.typeProduct}</TableCell>
+                <TableCell>{product.product.supplierProduct ? product.product.supplierProduct.name : ""}</TableCell>
+                <TableCell>{product.totalAmount}</TableCell>
                 <TableCell width={200}>
-                  <Button onClick={() => handleDelete(product.id)} style={{ marginRight: '10px' }}>Delete</Button>
+                  <Button onClick={() => handleDelete(product.product.id)} style={{ marginRight: '10px' }}>Delete</Button>
                   <Button onClick={() => handleEdit()}>Editar</Button>
                 </TableCell>
               </TableRow>

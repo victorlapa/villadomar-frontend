@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import { Button } from "./button";
-
-interface Field {
-  name: string;
-  placeholder: string;
-  type: string;
-  className?: string; // Add className property
-}
+import React, { useState } from 'react';
+import { Button } from './button';
+import { ProductType } from '@/types/productType';
+import { Field } from '@/types/field';
 
 interface FormProps {
   fields: Field[];
   onSubmit: (formData: Record<string, string>) => void;
 }
+
 
 const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
@@ -45,26 +41,45 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
       });
   };
 
-  return (
-    <div className="flex items-center justify-center w-1/2 h-3/4 flex-col rounded-3xl bg-gray-100 shadow-xl">
-      {fields.map((field, index) => (
-        <input
-          key={index}
-          type={field.type}
-          placeholder={field.placeholder}
-          value={formData[field.name] || ""}
-          onChange={(e) => handleChange(field.name, e.target.value)}
-          className={`border border-gray-300 rounded-md px-2 py-1 m-2 ${field.className}`}
-        />
-      ))}
-      <Button
-        onClick={handleSubmit}
-        className="bg-sky-950 text-white px-4 py-2 rounded-md w-2/5"
-      >
-        Submit
-      </Button>
-    </div>
-  );
+    return (
+        <div className="flex items-center justify-center flex-col">
+            {fields.map((field, index) => {
+
+                if (field.type == "select" && field.values) {
+                    return (
+                    <div className="flex items-center">
+                        <p>Tipo: </p>
+                        <select
+                            key={index}
+                            value={formData[field.name] || ''}
+                            onChange={(e) => handleChange(field.name, e.target.value)}
+                            className={`border border-gray-300 rounded-md px-2 py-1 m-2 ${field.className}`}
+                        >
+                            {
+                                field.values.map((value) => {
+                                    return (<option value={value.id}>{value.name}</option>);
+                                })
+                            }
+                        </select>
+                    </div>
+                    );
+                }
+                else {
+                    return (<input
+                        key={index}
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        value={formData[field.name] || ''}
+                        onChange={(e) => handleChange(field.name, e.target.value)}
+                        className={`border border-gray-300 rounded-md px-2 py-1 m-2 ${field.className}`}
+                    />);
+                }
+
+            })}
+            <div className="h-10"/>
+            <Button onClick={handleSubmit} className="bg-sky-950 text-white px-4 py-2 rounded-md">Enviar</Button>
+        </div>
+    );
 };
 
 export default Form;

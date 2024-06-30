@@ -1,5 +1,16 @@
+import { SupplierProduct } from '@/types/supplierProduct';
+
 export type Product = {
-  id: number;
-  name: string;
-  description: string;
+  product: {
+    id: number;
+    name: string;
+    description: string;
+    value: number;
+    weight: number;
+    typeProductId: number;
+    typeProduct: string;
+    supplierProductId: number;
+    supplierProduct: SupplierProduct;
+  };
+  totalAmount: number;
 };
