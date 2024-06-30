@@ -20,9 +20,12 @@ export default function Estoque() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => {
-    setIsModalOpen(true);
+  const [modalState, setModalState] = useState<{ isOpen: boolean; onSubmit: (() => void) | null }>({ isOpen: false, onSubmit: null });
+
+  const openModal = (callback: () => void) => {
+    setModalState({ isOpen: true, onSubmit: callback });
   };
+  
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -72,8 +75,33 @@ export default function Estoque() {
     { name: 'Tipo', type: 'select', values: productType },
   ];
 
-  const handleSubmit = (formData: Record<string, string>) => {
-    console.log(formData);
+  const handleSubmit = () => { 
+    var name = (document.getElementById("name") as HTMLInputElement);
+    var desc = (document.getElementById("description") as HTMLInputElement);
+
+    const data = {
+      name: name.value,
+      description: desc.value
+    };
+
+    fetch(
+      "https://villadomarapi.azurewebsites.net/api/Products/InsertProduct",
+      {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      }
+    )
+      .then((response) => response.json())
+      .then(() => {
+        name.value = "";
+        desc.value = "";
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   // Delete do produto 
@@ -98,11 +126,50 @@ export default function Estoque() {
   // sera q daria pra fazer com que todo edit fosse modularizado, ou to viajando?
   // na vdd o editar seria melhor arbri uma tela nova e la rodar essa funcao 
   // ou ent editar direto na tabela, mas n sei o quao dificil isso é 
-  const handleEdit = () => {
-    openModal()
-  };
-  
+const handleEdit = (productId: number) => {
+  fetch(
+    `https://villadomarapi.azurewebsites.net/api/Products/GetProduct?id=${productId}`
+  )
+    .then((response) => response.json())
+    .then((product) => {
+      var name = (document.getElementById("name") as HTMLInputElement);
+      var desc = (document.getElementById("description") as HTMLInputElement);
 
+      name.value = product.name;
+      desc.value = product.description;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+const submitEdit = (productId: number) => {
+  var name = (document.getElementById("name") as HTMLInputElement);
+  var desc = (document.getElementById("description") as HTMLInputElement);
+
+  const data = {
+    name: name.value,
+    description: desc.value
+  };
+  fetch(
+    `https://villadomarapi.azurewebsites.net/api/Products/EditProduct?id=${productId}`,
+    {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    }
+  )
+    .then((response) => response.json())
+    .then(() => {
+      name.value = "";
+      desc.value = "";
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
+  
   // tem q ver se dar pra mudar o tamanho da celular de acoes 
   // ia ser legal botar um botao de lixeira e de um lapis 
   return (
@@ -112,7 +179,7 @@ export default function Estoque() {
         <StockHeader
           title="Controle de estoque"
           buttonLabel="Adicionar"
-          onClick={openModal}
+          onClick={() => openModal(handleSubmit)}
         />
         <Modal isOpen={isModalOpen} onClose={closeModal}>
           <Form fields={fields} onSubmit={handleSubmit} />
