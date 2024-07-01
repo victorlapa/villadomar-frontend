@@ -13,12 +13,11 @@ import { ProductType } from "@/types/productType";
 
 interface FormProps {
   fields: Field[];
-  onSubmit: () => void; 
-// Modify the type of onSubmit to accept an arrow function
+  onSubmit: () => void;
+  // Modify the type of onSubmit to accept an arrow function
 }
 
-
-const Form: React.FC<FormProps> = ({ fields, onSubmit}) => {
+const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
 
   const handleChange = (field: string, value: string) => {
@@ -96,9 +95,3 @@ const Form: React.FC<FormProps> = ({ fields, onSubmit}) => {
 };
 
 export default Form;
-
-//  const fields = [
-//    { name: 'Name', type: 'text', className: 'adc mais coisa no css' },
-//    { name: 'Email', type: 'email' },
-//     { name: 'Password', type: 'password' },
-//  ];

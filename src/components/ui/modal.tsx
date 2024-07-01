@@ -41,7 +41,6 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, id }) => {
   return (
     <>
       {isModalOpen && (
-        //n sei fazer animacao em tailwind espero que alguem consiga
         <div
           className={`transition-opacity fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ${
             isOpen ? "opacity-100" : "opacity-0"
@@ -55,7 +54,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, id }) => {
             }`}
             style={{ pointerEvents: "auto", transition: "transform 0.3s" }}
           >
-            <input type="hidden" id="id" value={id.id} disabled/>
+            <input type="hidden" id="id" value={id.id} disabled />
             <button
               className="absolute top-0 right-2 m-2 text-gray-500"
               onClick={closeModal}
