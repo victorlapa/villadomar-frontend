@@ -18,17 +18,17 @@ export default function Estoque() {
   const [products, setProducts] = useState<Product[] | null>();
   const [productType, setProductType] = useState<ProductType[]>([]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState({ isOpen: false, param: {} });
 
   const [modalState, setModalState] = useState<{ isOpen: boolean; onSubmit: (() => void) | null }>({ isOpen: false, onSubmit: null });
 
-  const openModal = (callback: () => void) => {
-    setModalState({ isOpen: true, onSubmit: callback });
+  const openModal = (id?: number) => {
+    alert(id);
+    setIsModalOpen({ isOpen: true, param: {id:id} });
   };
-  
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setIsModalOpen({ isOpen: false, param: {} });
   };
 
   const fetchProducts = async () => {
@@ -68,40 +68,55 @@ export default function Estoque() {
   }, []);
 
   const fields: Field[] = [
-    { name: 'Nome', type: 'text', className: 'text-red' },
-    { name: 'Valor', type: 'number' },
-    { name: 'Descrição', type: 'text' },
-    { name: 'Peso', type: 'number' },
-    { name: 'Tipo', type: 'select', values: productType },
+    { name: 'name', type: 'text', className: 'text-red', id: 'name', placeholder  : 'Nome do produto'},
+    { name: 'value', type: 'number', id: 'value', placeholder: 'Valor do produto'},
+    { name: 'description', type: 'text', id: 'description', placeholder: 'Descrição do produto'},
+    { name: 'weight', type: 'number', id: 'weight', placeholder: 'Peso do produto'},
+    { name: 'typeProductID', type: 'select', values: productType, id: 'typeProduct', placeholder: 'Tipo do produto'},
   ];
 
-  const handleSubmit = () => { 
+  const handleSubmit = async (productId?: number) => { 
     var name = (document.getElementById("name") as HTMLInputElement);
     var desc = (document.getElementById("description") as HTMLInputElement);
+    var id = (document.getElementById("id") as HTMLInputElement);
+    var value = (document.getElementById("value") as HTMLInputElement);
+    var weight = (document.getElementById("weight") as HTMLInputElement);
+    var typeProduct = (document.getElementById("typeProduct") as HTMLInputElement);
 
     const data = {
       name: name.value,
-      description: desc.value
+      description: desc.value,
+      id: id.value,
+      value: value.value,
+      weight: weight.value,
+      typeProductID: typeProduct.value
     };
+    var url = "https://villadomarapi.azurewebsites.net/api/Products/InsertProduct";
+    var method = "POST";
 
-    fetch(
-      "https://villadomarapi.azurewebsites.net/api/Products/InsertProduct",
-      {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      }
-    )
-      .then((response) => response.json())
-      .then(() => {
+    if (id.value !== "") {
+      url = `https://villadomarapi.azurewebsites.net/api/Products/EditProduct?id=${productId}`;
+      method = "PUT";
+    }
+    try {
+      const response = await fetch(
+        url,{
+          method: method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      if (response.ok) {
         name.value = "";
         desc.value = "";
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      } else {
+        console.error('Failed to submit form');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   // Delete do produto 
@@ -127,6 +142,7 @@ export default function Estoque() {
   // na vdd o editar seria melhor arbri uma tela nova e la rodar essa funcao 
   // ou ent editar direto na tabela, mas n sei o quao dificil isso é 
 const handleEdit = (productId: number) => {
+  openModal(productId);
   fetch(
     `https://villadomarapi.azurewebsites.net/api/Products/GetProduct?id=${productId}`
   )
@@ -134,42 +150,20 @@ const handleEdit = (productId: number) => {
     .then((product) => {
       var name = (document.getElementById("name") as HTMLInputElement);
       var desc = (document.getElementById("description") as HTMLInputElement);
+      var value = (document.getElementById("value") as HTMLInputElement);
+      var weight = (document.getElementById("weight") as HTMLInputElement);
+      var typeProduct = (document.getElementById("typeProduct") as HTMLInputElement);
 
-      name.value = product.name;
-      desc.value = product.description;
+      name.setAttribute('value', product.name);
+      desc.setAttribute('value', product.description);
+      value.setAttribute('value', product.value);
+      weight.setAttribute('value', product.weight);
+      typeProduct.setAttribute('value', product.typeProductID);
     })
     .catch((error) => {
       console.error(error);
     });
 }
-const submitEdit = (productId: number) => {
-  var name = (document.getElementById("name") as HTMLInputElement);
-  var desc = (document.getElementById("description") as HTMLInputElement);
-
-  const data = {
-    name: name.value,
-    description: desc.value
-  };
-  fetch(
-    `https://villadomarapi.azurewebsites.net/api/Products/EditProduct?id=${productId}`,
-    {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-    }
-  )
-    .then((response) => response.json())
-    .then(() => {
-      name.value = "";
-      desc.value = "";
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-  
   // tem q ver se dar pra mudar o tamanho da celular de acoes 
   // ia ser legal botar um botao de lixeira e de um lapis 
   return (
@@ -179,10 +173,10 @@ const submitEdit = (productId: number) => {
         <StockHeader
           title="Controle de estoque"
           buttonLabel="Adicionar"
-          onClick={() => openModal(handleSubmit)}
+          onClick={() => openModal()}
         />
-        <Modal isOpen={isModalOpen} onClose={closeModal}>
-          <Form fields={fields} onSubmit={handleSubmit} />
+        <Modal isOpen={isModalOpen.isOpen} onClose={closeModal} id={isModalOpen.param}>
+          <Form fields={fields} onSubmit={() => handleSubmit()} />
         </Modal>
         <Table>
           <TableCaption>Produtos em estoque</TableCaption>
@@ -213,8 +207,8 @@ const submitEdit = (productId: number) => {
                 <TableCell>{product.product.supplierProduct ? product.product.supplierProduct.name : ""}</TableCell>
                 <TableCell>{product.totalAmount}</TableCell>
                 <TableCell width={200}>
-                  <Button onClick={() => handleDelete(product.product.id)} style={{ marginRight: '10px' }}>Delete</Button>
-                  <Button onClick={() => handleEdit()}>Editar</Button>
+                  <Button onClick={() => handleDelete(product.product.id)} style={{ marginRight: '10px' }}>🗑️</Button>
+                  <Button onClick={() => handleEdit(product.product.id)}>📝</Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -224,3 +218,33 @@ const submitEdit = (productId: number) => {
     </Page>
   );
 }
+
+// 1 
+// Escorra o milho e use a própria lata para as medidas.
+
+// 2
+// Unte e enfarinhe uma forma de bolo com furo.
+
+// 3
+// Preaqueça o forno.
+
+// 4
+// Coloque no liquidificador o milho (já escorrido), o leite, açúcar, flocão de milho, óleo, ovos e bata bem até que o milho fique bem moído.
+
+// 5
+// Se quiser, pode acrescentar duas colheres de sopa de coco ralado.
+
+// 6
+// Acrescente o fermento em pó e pulse o liquidificador 3 vezes.
+
+// 7
+// Despeje essa massa na forma e leve ao forno médio.
+
+// 8
+// Deixe assar por, aproximadamente, 40 minutos.
+
+// 9
+// Faça o teste do palito e observe um tom dourado médio, para saber que o bolo está pronto.
+
+// 10
+// Espere esfriar totalmente para desenformar.

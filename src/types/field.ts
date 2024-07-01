@@ -4,6 +4,7 @@ export type Field = {
     name: string;
     type: string;
     placeholder?: string;
-    values?: ProductType[];
+    values?: any[];
     className?: string; // Add className property
+    id: string;
 }

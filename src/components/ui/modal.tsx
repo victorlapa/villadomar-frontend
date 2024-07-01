@@ -4,12 +4,12 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  id: any;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, id }) => {
   const [isModalOpen, setIsModalOpen] = useState(isOpen);
   const modalRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     setIsModalOpen(isOpen);
   }, [isOpen]);
@@ -55,6 +55,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
             }`}
             style={{ pointerEvents: "auto", transition: "transform 0.3s" }}
           >
+            <input type="hidden" id="id" value={id.id} disabled/>
             <button
               className="absolute top-0 right-2 m-2 text-gray-500"
               onClick={closeModal}
