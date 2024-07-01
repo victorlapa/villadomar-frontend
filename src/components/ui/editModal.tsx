@@ -24,6 +24,8 @@ const EditModal = ({
   const [typeProduct, setTypeProduct] = useState(
     editProduct.product.typeProduct
   );
+  const [typeProductId, setTypeProductId] = useState(editProduct.product.typeProductId)
+  const [productId, setProductId] = useState(editProduct.product.id);
 
   useEffect(() => {
     setName(editProduct.product.name);
@@ -31,17 +33,28 @@ const EditModal = ({
     setValue(editProduct.product.value);
     setWeight(editProduct.product.weight);
     setTypeProduct(editProduct.product.typeProduct);
+    setTypeProductId(editProduct.product.typeProductId);
+    setProductId(editProduct.product.id);
   }, [editProduct]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (productId: number) => {
+    const data = {
+      name: name,
+      description: description,
+      value: value,
+      weight: weight,
+      typeProductId: typeProductId,
+      id: productId,
+    };
     try {
       const response = await fetch(
         `https://villadomarapi.azurewebsites.net/api/Products/EditProduct`,
         {
-          body: JSON.stringify({
-            description: description,
-            // adicionar outros campos
-          } as Product),
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data as Product),
         }
       );
 
@@ -126,14 +139,14 @@ const EditModal = ({
                   onClick={onCloseModal}
                   className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                 >
-                  Deactivate
+                  Cancelar
                 </button>
                 <button
                   type="button"
-                  onClick={onCloseModal}
+                  onClick={() => handleSubmit(productId)}
                   className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                 >
-                  Cancel
+                  Atualizar
                 </button>
               </div>
             </div>

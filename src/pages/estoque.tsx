@@ -101,16 +101,12 @@ export default function Estoque() {
     },
   ];
 
-  const handleSubmit = async (productId?: number) => {
-    var name = document.getElementById("name") as HTMLInputElement;
-    var desc = document.getElementById("description") as HTMLInputElement;
-    var id = document.getElementById("id") as HTMLInputElement;
-    var value = document.getElementById("value") as HTMLInputElement;
-    var weight = document.getElementById("weight") as HTMLInputElement;
-    var typeProduct = document.getElementById(
-      "typeProduct"
-    ) as HTMLInputElement;
-
+  const handleSubmit = async () => {
+    const [name, desc, id, value, weight, typeProduct] = fields.map(
+      (field) => {
+        return document.getElementById(field.name) as HTMLInputElement;
+      }
+    );
     const data = {
       name: name.value,
       description: desc.value,
@@ -119,38 +115,29 @@ export default function Estoque() {
       weight: weight.value,
       typeProductID: typeProduct.value,
     };
-    var url =
-      "https://villadomarapi.azurewebsites.net/api/Products/InsertProduct";
-    var method = "POST";
 
-    if (id.value !== "") {
-      url = `https://villadomarapi.azurewebsites.net/api/Products/EditProduct?id=${productId}`;
-      method = "PUT";
-    }
     try {
-      const response = await fetch(url, {
-        method: method,
+      const response = await fetch("https://villadomarapi.azurewebsites.net/api/Products/InsertProduct", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
       if (response.ok) {
-        name.value = "";
-        desc.value = "";
+        closeModal();
+        const newProduct = await response.json();
+        setProducts((prevProducts) => [...prevProducts, newProduct]);
       } else {
-        console.error("Failed to submit form");
+        console.error("Falha ao enviar o formulário");
       }
     } catch (error) {
-      console.error(error);
+      console.error("Ocorreu um erro ao enviar o formulário: " + error);
     }
   };
-
-  // Delete do produto
-  // sera q seria melhor colocar em outros arquivos ou deixar aqui ta suave?
+  
   const handleDelete = async (productId: number) => {
     try {
-      // n sei se tem link pra deletar
       const response = await fetch(
         `https://villadomarapi.azurewebsites.net/api/Products/DeleteProduct?id=${productId}`,
         {
@@ -158,7 +145,6 @@ export default function Estoque() {
         }
       );
       if (response.ok) {
-        //se ok o delete ja filtra os novos
         setProducts((prevProducts) =>
           prevProducts?.filter((product) => product.product.id !== productId)
         );
@@ -166,7 +152,7 @@ export default function Estoque() {
         alert("Falaha ao deletar o produto");
       }
     } catch (error) {
-      console.error("Ocorrou um erro ao deltar o produto", error);
+      console.error("Ocorrou um erro ao deltar o produto: ", error);
     }
   };
 
@@ -182,7 +168,7 @@ export default function Estoque() {
         <StockHeader
           title="Controle de estoque"
           buttonLabel="Adicionar"
-          onClick={() => openModal()}
+          onClick={openModal}
         />
         <Modal
           isOpen={isModalOpen.isOpen}
