@@ -2,22 +2,12 @@ import React, { useState } from "react";
 import { Button } from "./button";
 import { Field } from "@/types/field";
 import { ProductType } from "@/types/productType";
-
-// interface Field {
-//   name: string;
-//   placeholder: string;
-//   type: string;
-//   className?: string;
-//   id: string; // Add className property
-// }
-
 interface FormProps {
   fields: Field[];
   onSubmit: () => void;
-  // Modify the type of onSubmit to accept an arrow function
 }
 
-const Form: React.FC<FormProps> = ({ fields, onSubmit }) => {
+const Form: React.FC<FormProps> = ({ fields}) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
 
   const handleChange = (field: string, value: string) => {
