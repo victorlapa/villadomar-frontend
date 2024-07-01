@@ -5,11 +5,13 @@ import { cn } from "@/lib/utils"
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
+  //se adc muita coisa na tabea ela fica maior q a tela, ssism ela ta scrolavel, só que a tela ainda fica td cagada 
+  //arrumeir, do jeito certo? n sei, mas funciona 
 >(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
+  <div className="relative w-full overflow-auto max-h-[90%]">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
+      className={cn("w-full caption-bottom text-sm overflow-auto max-h-screen", className)}
       {...props}
     />
   </div>
