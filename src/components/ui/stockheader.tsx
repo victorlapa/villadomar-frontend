@@ -4,8 +4,8 @@ import { UserIcon } from "..";
 
 export type StockHeaderProps = {
   title: string;
-  buttonLabel: string;
-  onClick: () => void;
+  buttonLabel?: string;
+  onClick?: () => void;
 };
 
 const StockHeader: React.FC<StockHeaderProps> = ({
@@ -18,7 +18,9 @@ const StockHeader: React.FC<StockHeaderProps> = ({
       <label className="font-bold text-xl mr-10 text-black bg-darkest">
         {title}
       </label>
-      <Button onClick={onClick}>{buttonLabel}</Button>
+      {buttonLabel && 
+        <Button onClick={onClick}>{buttonLabel}</Button>
+      }
       <div className="flex-grow"></div>
       <UserIcon />
     </header>

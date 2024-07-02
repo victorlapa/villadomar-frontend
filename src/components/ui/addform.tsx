@@ -7,7 +7,7 @@ interface FormProps {
   onSubmit: () => void;
 }
 
-const Form: React.FC<FormProps> = ({ fields}) => {
+const Form: React.FC<FormProps> = ({ fields, onSubmit}) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
 
   const handleChange = (field: string, value: string) => {
@@ -75,7 +75,7 @@ const Form: React.FC<FormProps> = ({ fields}) => {
       })}
       <div className="h-10" />
       <Button
-        onClick={handleSubmit}
+        onClick={onSubmit}
         className="bg-sky-950 text-white px-4 py-2 rounded-md w-2/5"
       >
         Enviar
