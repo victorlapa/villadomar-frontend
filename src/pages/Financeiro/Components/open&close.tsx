@@ -13,6 +13,7 @@ export default function Open$Close () {
             "https://villadomarapi.azurewebsites.net/api/Financial/GetFinancial"
         );
         const response = await data.json();
+        console.log(response);
         return response;
     }
 

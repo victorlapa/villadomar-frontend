@@ -96,24 +96,27 @@ export default function Estoque() {
       name: "typeProductID",
       type: "select",
       values: productType,
-      id: "typeProduct",
+      id: "typeProductID",
       placeholder: "Tipo do produto",
     },
   ];
-
+  
   const handleSubmit = async () => {
-    const [name, desc, id, value, weight, typeProduct] = fields.map(
-      (field) => {
-        return document.getElementById(field.name) as HTMLInputElement;
-      }
+    var [name, description, id, value, weight] = fields.map(
+        (field) => {
+          return document.getElementById(field.id) as HTMLInputElement;
+        }
     );
+
+    var typeProductID = document.getElementById('typeProductID') as HTMLInputElement
+
     const data = {
       name: name.value,
-      description: desc.value,
+      description: description.value,
       id: id.value,
       value: value.value,
       weight: weight.value,
-      typeProductID: typeProduct.value,
+      typeProductId: typeProductID.value
     };
 
     try {
@@ -126,8 +129,7 @@ export default function Estoque() {
       });
       if (response.ok) {
         closeModal();
-        const newProduct = await response.json();
-        setProducts((prevProducts) => [...prevProducts, newProduct]);
+
       } else {
         console.error("Falha ao enviar o formulário");
       }

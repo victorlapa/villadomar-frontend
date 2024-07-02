@@ -10,7 +10,7 @@ export default function AllTransactions() {
           "https://villadomarapi.azurewebsites.net/api/Products/GetProducts"
         );
         const response = await data.json();
-        
+        console.log(response);
         return response;
       };
     
@@ -60,7 +60,7 @@ export default function AllTransactions() {
               <TableRow key={product.id}>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
-                <TableCell></TableCell>
+                <TableCell>Cliente não informado</TableCell>
                 <TableCell>R$ {product.value},00</TableCell>
               </TableRow>
             ))}
